@@ -16,4 +16,47 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to render_template :index
     end
   end
+
+  describe "GET #show" do
+    let(:question) { FactoryGirl.create(:question) }
+    before do
+      get :show, params: {id: question}
+    end
+    it "assigns the requested question from db to the variable @question" do
+      expect(assigns(:question)).to eq(question)
+    end
+
+    it "renders show view" do
+      expect(response).to render_template :show
+    end
+  end
+
+  describe "GET #new" do
+    let(:question) { FactoryGirl.create(:question) }
+    before do
+      get :new
+    end
+
+    it "assigns a new Question to @question" do
+      expect(assigns(:question)).to be_a_new(Question)
+    end
+    it "renders new view" do
+      expect(response).to render_template :new
+    end
+  end
+
+  describe "GET #edit" do
+    let(:question) { FactoryGirl.create(:question) }
+    before do
+      get :edit, params: {id: question}
+    end
+
+    it "assigns the requested question from db to the variable @question" do
+      expect(assigns(:question)).to eq(question)
+    end
+
+    it "renders edit view" do
+      expect(response).to render_template :edit
+    end
+  end
 end
