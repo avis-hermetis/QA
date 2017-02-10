@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :question_load, only: [:show]
+
   def index
     @questions = Question.all
   end
