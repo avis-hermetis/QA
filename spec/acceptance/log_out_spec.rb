@@ -7,13 +7,12 @@ feature "User log out", %q{
 } do
     given(:user) {create(:user)}
     scenario do
-        log_in(user)
-        save_and_open_page
-        click_on "Log out"
+      log_in(user)
+      click_on "Log out"
 
-        except(current_path).to eq questions_path
-        except(page).to have_content "You have successfully log out"
-        except(page).to have_content "Log in"
-        except(page).to_not have_content "Log in"
+      expect(page).to have_content "Signed out successfully."
+      expect(page).to_not have_content "Log out"
+      expect(page).to have_content "Sign up"
+      expect(current_path).to eq root_path
     end
 end
