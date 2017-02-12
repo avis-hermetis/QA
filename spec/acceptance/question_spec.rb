@@ -51,34 +51,43 @@ feature "User deletes his question", %q{
   As an authenticated user
   I want to be able to delete my question
 } do
-  scenario "Authenticated user deletes HIS question" do
-    given(:user) {create(:user)}
-    given(:question) {create(:question, user: user)}
+  given!(:question) {create(:question)}
 
-    log_in(user)
-
-    visit questions_path
-    expect(page).to have_content question.title
-
-    click_on "Delete"
-
-    expect(current_path).to eq questions_path
-    expect(page).to_not have_content question.title
-  end
-  scenario "Authenticated user tries to delete OTHER USER'S question" do
-    given(:question) {create(:question)}
-    given(:user) {create(:user)}
-
-    log_in(user)
-
-    visit questions_path
-    expect(page).to have_content question.title
-    expect(page).to_not have_content "Delete"
-  end
   scenario "Guest tries to delete any question" do
     visit questions_path
 
     expect(page).to have_content question.title
+    expect(page).to_not have_content "Log out"
     expect(page).to_not have_content "Delete"
   end
+
+  context "Authenticated user is NOT the author of question" do
+    given(:user) {create(:user)}
+
+    scenario " tries to delete OTHER USER'S question" do
+      log_in(user)
+
+      visit questions_path
+      expect(page).to have_content question.title
+      expect(page).to_not have_content "Delete"
+    end
+  end
+
+  context "Authenticated user IS the author of question" do
+    given(:user) {create(:user)}
+    given!(:question) {create(:question, user: user)}
+
+    scenario "deletes HIS question" do
+      log_in(user)
+
+      visit questions_path
+      expect(page).to have_content question.title
+
+      click_on "Delete"
+
+      expect(current_path).to eq questions_path
+      expect(page).to_not have_content question.title
+    end
+  end
+
 end
