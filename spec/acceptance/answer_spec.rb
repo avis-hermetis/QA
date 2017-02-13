@@ -5,20 +5,78 @@ feature "Authenticated user creates answer", %q{
   As an authenticated user
   I want to be able to create answer
 } do
-  scenario "Authenticated user creates answer" do
+    given(:question) {create(:question)}
 
-  end
-  scenario "Not authenticated user tries to create answer" do
+    scenario "Not authenticated user tries to create answer" do
+      visit question_path(question)
 
-  end
-end
+      fill_in "Body", with: "some answer"
+      click_on "Answer it"
 
-feature "User see answers", %q{
-  In order to find suitable answer
-  As an user
-  I want to be able see answers to the exact question
+      expect(page).to_not have_content "some answer"
+      expect(current_path).to eq question_answers_path(question)
+    end
+
+    context "Authenticated user" do
+      given(:user) {create(:user)}
+
+      scenario "creates answer" do
+        log_in(user)
+
+        visit question_path(question)
+
+        fill_in "Body", with: "some answer"
+        click_on "Answer it"
+
+        expect(page).to have_content "some answer"
+        expect(current_path).to eq question_path(question)
+      end
+    end
+
+ end
+
+  feature "Authenticated user deletes answer", %q{
+  In order to dispode of the wrong answer
+  As an authenticated user
+  I want to be able to delete my answer
 } do
-  scenario "User see answers to the question" do
+    given!(:answer) {create(:answer)}
 
-  end
+    scenario "Guest tries to delete any answer" do
+      visit question_path(answer.question)
+
+      expect(page).to have_content answer.body
+      expect(page).to_not have_content "Log out"
+      expect(page).to_not have_content "Delete"
+    end
+
+    context "Authenticated user " do
+      given(:user) {create(:user)}
+
+      scenario " tries to delete OTHER USER'S answer" do
+        log_in(user)
+
+        visit question_path(answer.question)
+        expect(page).to have_content answer.body
+        expect(page).to_not have_content "Delete"
+      end
+    end
+
+    context "Authenticated user" do
+      given(:user) {create(:user)}
+      given!(:answer) {create(:answer, user: user)}
+
+      scenario "deletes HIS answer" do
+        log_in(user)
+
+        visit question_path(answer.question)
+        expect(page).to have_content answer.body
+
+        click_on "Delete"
+        save_and_open_page
+        expect(page).to have_content "Your answer have been successfully deleted."
+        expect(current_path).to eq question_path(answer.question)
+        expect(page).to_not have_content answer.body
+      end
+    end
 end

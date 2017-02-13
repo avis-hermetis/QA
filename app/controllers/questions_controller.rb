@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-
+    @answer = @question.answers.new
   end
 
   def new
@@ -26,9 +26,14 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy
-    flash[:notice] = "Your question have been successfully deleted."
-    redirect_to questions_path
+     if current_user.author_of?(@question)
+      @question.destroy
+      flash[:notice] = "Your question have been successfully deleted."
+      redirect_to questions_path
+    else
+      flash[:notice] = "You can't delete other user's question."
+      redirect_to questions_path
+    end
   end
 
   private

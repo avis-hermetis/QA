@@ -3,7 +3,6 @@ class AnswersController < ApplicationController
 
 
   def new
-    @question = Question.find(params[:question_id])
     @answer = @question.answers.new
   end
 
@@ -18,9 +17,15 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
-    flash[:notice] = "Your answer have been successfully deleted."
-    redirect_to @question
+    @answer = Answer.find(params[:id])
+    if current_user.author_of?(@answer)
+      @answer.destroy
+      @notice = "Your answer have been successfully deleted."
+      redirect_to @answer.question, notice: @notice
+    else
+      @notice = "Other user's answer can't be deleted."
+      redirect_to @answer.question, notice: @notice
+    end
   end
 
   private

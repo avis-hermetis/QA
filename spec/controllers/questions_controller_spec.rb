@@ -74,7 +74,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe "DELETE #destroy" do
     sign_in_user
-
+    let(:question) {create(:question, user: @user)}
     it "deletes requested question from the db" do
       question
       expect{ delete :destroy, params: {id: question} }.to change(Question, :count).by(-1)

@@ -5,4 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
   has_many :questions
   has_many :answers
+
+  def author_of?(obj)
+    true if id == obj.user_id
+  end
 end
