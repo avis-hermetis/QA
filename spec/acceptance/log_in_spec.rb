@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "User log in", %q{
-  In order to ask question
+  In order to ask questions
   As a user
   I want to log in
 } do

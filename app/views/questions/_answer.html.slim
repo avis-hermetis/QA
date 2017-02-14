@@ -1,4 +1,5 @@
 - @question.answers.each do |a|
   = a.body
   br
-    = link_to "Delete", answer_path(a), method: :delete if current_user && current_user.eql?(a.user)
+    - if current_user && current_user.author_of?(a)
+      = link_to "Delete", answer_path(a), method: :delete

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "Unregistered user sign up", %q{
-  In order to ask question
+  In order to ask questions
   As unregistered user
   I want to sign up
 } do

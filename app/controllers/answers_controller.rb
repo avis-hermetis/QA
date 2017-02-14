@@ -1,19 +1,11 @@
 class AnswersController < ApplicationController
-  before_action :set_question, only:[:new, :create]
-
-
-  def new
-    @answer = @question.answers.new
-  end
+  before_action :set_question, only:[:create]
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
-    if @answer.save
-      redirect_to @question
-    else
-      render :new
-    end
+    @answer.save
+    redirect_to @question
   end
 
   def destroy
@@ -21,11 +13,10 @@ class AnswersController < ApplicationController
     if current_user.author_of?(@answer)
       @answer.destroy
       @notice = "Your answer have been successfully deleted."
-      redirect_to @answer.question, notice: @notice
     else
       @notice = "Other user's answer can't be deleted."
-      redirect_to @answer.question, notice: @notice
     end
+    redirect_to @answer.question, notice: @notice
   end
 
   private

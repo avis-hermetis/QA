@@ -73,3 +73,5 @@ gem 'rails-controller-testing'
 
 gem 'devise'
 
+gem "dynamic_form"
+
