@@ -14,13 +14,12 @@ feature "Authenticated user creates answers", %q{
     fill_in "Body", with: "some answers"
     click_on "Answer it"
 
-    expect(page).to have_content "Fail to save the answer"
-    expect(page).to have_content "User must exist"
-    expect(current_path).to eq question_answers_path(question)
+    expect(page).to have_content "You need to sign in or sign up before continuing."
+    expect(current_path).to eq new_user_session_path
+
   end
 
   context "Authenticated user" do
-
 
     scenario "creates answers with valid attributes" do
       log_in(user)

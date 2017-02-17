@@ -17,7 +17,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.new(question_params)
-
+    redirect_to new_user_session_path unless @question.user == current_user
     if @question.save
       flash[:notice] = "Your question have been successfully created."
       redirect_to @question

@@ -7,6 +7,15 @@ feature "User deletes his questions", %q{
 } do
   given!(:question) {create(:question)}
 
+  context "Not authenticated user" do
+    scenario 'tries to delete question'do
+      visit questions_path
+
+      expect(page).to have_content question.title
+      expect(page).to_not have_content "Delete"
+    end
+  end
+
   context "Authenticated user is NOT the author of questions" do
     given(:user) {create(:user)}
 
@@ -14,6 +23,7 @@ feature "User deletes his questions", %q{
       log_in(user)
 
       visit questions_path
+
       expect(page).to have_content question.title
       expect(page).to_not have_content "Delete"
     end

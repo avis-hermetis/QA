@@ -1,9 +1,9 @@
 FactoryGirl.define do
   sequence :title do |n|
-    title "MyString#{n}"
+    "MyString#{n}"
   end
   factory :question do
-    title "MyString"
+    title
     body "MyText"
     user
   end

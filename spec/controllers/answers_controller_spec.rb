@@ -59,7 +59,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it "failes to delete requested answers from the db" do
-        expect{delete :destroy, params: {id: answer}}.to change(Answer, :count).by(0)
+        expect{delete :destroy, params: {id: answer}}.to_not change(Answer, :count)
       end
       it "redirects to questions show view" do
         delete :destroy, params: {id: answer}

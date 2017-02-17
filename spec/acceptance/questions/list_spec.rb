@@ -11,10 +11,8 @@ feature "User see the list of questions", %q{
 
     visit questions_path
 
-    expect(page).to have_content question_list[0].title
-    expect(page).to have_content question_list[1].title
-    expect(page).to have_content question_list[2].title
-    expect(page).to have_content question_list[3].title
-    expect(page).to have_content question_list[4].title
+    (0..4).each do |n|
+      expect(page).to have_content question_list[n].title
+    end
   end
 end
