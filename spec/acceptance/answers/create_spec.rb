@@ -14,8 +14,9 @@ feature "Authenticated user creates answers", %q{
     fill_in "Body", with: "some answers"
     click_on "Answer it"
 
-    expect(page).to_not have_content "some answers"
-    expect(current_path).to eq question_path(question)
+    expect(page).to have_content "Fail to save the answer"
+    expect(page).to have_content "User must exist"
+    expect(current_path).to eq question_answers_path(question)
   end
 
   context "Authenticated user" do
@@ -43,7 +44,7 @@ feature "Authenticated user creates answers", %q{
     click_on "Answer it"
 
     expect(page).to have_content "Body can't be blank"
-    expect(current_path).to eq questions_path
+    expect(current_path).to eq question_answers_path(question)
   end
 
 end
