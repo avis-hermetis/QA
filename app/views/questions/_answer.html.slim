@@ -1,0 +1,6 @@
+
+- @question.answers.each do |a|
+  = a.body
+  br
+    - if a.persisted? && current_user && current_user.author_of?(a)
+      = link_to "Delete", answer_path(a), method: :delete
