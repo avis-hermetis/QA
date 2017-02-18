@@ -7,20 +7,6 @@ feature "Authenticated user creates questions", %q{
 } do
   given(:user) {create(:user)}
 
-  scenario "Authenticated user creates question" do
-    log_in(user)
-
-    click_on "Ask question"
-
-    fill_in "Title", with: "questions title"
-    fill_in "Body", with: "some text"
-    click_on "Create"
-
-    expect(page).to have_content "Your question have been successfully created."
-    expect(page).to have_content "some text"
-    expect(current_path).to eq question_path(Question.last.id)
-
-  end
   scenario "Not authenticated user tries to create questions" do
     visit questions_path
     click_on "Ask question"
@@ -29,17 +15,46 @@ feature "Authenticated user creates questions", %q{
     expect(current_path).to eq new_user_session_path
   end
 
-  scenario "Authenticated user tries to create question with blank body" do
-    log_in(user)
+  context "Authenticated user" do
 
-    click_on "Ask question"
+    scenario "creates question with valid attributes" do
+      log_in(user)
+      click_on "Ask question"
+      fill_in "Title", with: "questions title"
+      fill_in "Body", with: "some text"
+      click_on "Create"
 
-    fill_in "Title", with: "questions title"
-    fill_in "Body", with: ""
-    click_on "Create"
+      expect(page).to have_content "Your question have been successfully created."
+      expect(page).to have_content "some text"
+      expect(current_path).to eq question_path(Question.last.id)
+    end
 
-    expect(page).to_not have_content "Your questions have been successfully created."
-    expect(page).to have_content "Body can't be blank"
-    expect(current_path).to eq questions_path
+    scenario "tries to create question with blank body" do
+      log_in(user)
+      click_on "Ask question"
+      fill_in "Title", with: "questions title"
+      fill_in "Body", with: ""
+      click_on "Create"
+
+      expect(page).to_not have_content "Your questions have been successfully created."
+      expect(page).to have_content "Body can't be blank"
+      expect(current_path).to eq questions_path
+    end
+
+    scenario "tries to create question with blank title" do
+      log_in(user)
+      click_on "Ask question"
+      fill_in "Title", with: ""
+      fill_in "Body", with: "some text"
+      click_on "Create"
+
+      expect(page).to_not have_content "Your questions have been successfully created."
+      expect(page).to have_content "Title can't be blank"
+      expect(current_path).to eq questions_path
+    end
+
   end
+
+
+
 end

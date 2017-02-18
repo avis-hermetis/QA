@@ -4,7 +4,7 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.new(answer_params)
-     redirect_to new_user_session_path unless @answer.user = current_user
+    @answer.user = current_user
     if @answer.save
       flash[:notice] = "Your answer have been successfully created."
       redirect_to @question
@@ -18,11 +18,11 @@ class AnswersController < ApplicationController
     answer = Answer.find(params[:id])
     if current_user.author_of?(answer)
       answer.destroy
-      @notice = "Your answer have been successfully deleted."
+      notice = "Your answer have been successfully deleted."
     else
-      @notice = "Other user's answer can't be deleted."
+      notice = "Other user's answer can't be deleted."
     end
-    redirect_to answer.question, notice: @notice
+    redirect_to answer.question, notice: notice
   end
 
   private

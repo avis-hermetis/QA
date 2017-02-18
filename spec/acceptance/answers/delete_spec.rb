@@ -8,9 +8,16 @@ feature "Authenticated user deletes answers", %q{
   given!(:answer) {create(:answer)}
   given(:user) {create(:user)}
 
-  context "Authenticated user " do
+  scenario 'Not authenticated user tries to delete answer'do
+    visit question_path(answer.question)
 
-    scenario " tries to delete OTHER USER'S answers" do
+    expect(page).to have_content answer.body
+    expect(page).to_not have_content "Delete"
+  end
+
+  context "Other user " do
+
+    scenario " tries to delete answer" do
       log_in(user)
 
       visit question_path(answer.question)
@@ -19,11 +26,12 @@ feature "Authenticated user deletes answers", %q{
     end
   end
 
-  context "Authenticated user" do
+  context "Author of answer" do
     given!(:answer) {create(:answer, user: user)}
 
-    scenario "deletes HIS answers" do
+    scenario "deletes his answer" do
       log_in(user)
+
 
       visit question_path(answer.question)
       expect(page).to have_content answer.body

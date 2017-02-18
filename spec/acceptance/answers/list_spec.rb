@@ -13,8 +13,8 @@ feature "User see the list of answers of a particular question ", %q{
 
     expect(page).to have_content question.title
     expect(page).to have_content question.body
-    (0..4).each do |n|
-      expect(page).to have_content answers[n].body
+    answers.each do |a|
+      expect(page).to have_content a.body
     end
   end
 end
