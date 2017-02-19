@@ -8,37 +8,32 @@ feature "Authenticated user creates answers", %q{
   given(:question) {create(:question)}
   given(:user) {create(:user)}
 
-  scenario "Not authenticated user tries to create answers" do
+  scenario "Not authenticated user tries to create answers", js: true do
     visit question_path(question)
 
-    fill_in "Body", with: "some answers"
+    fill_in "Body", with: "some answer"
     click_on "Answer it"
 
-    expect(page).to have_content "You need to sign in or sign up before continuing."
-    expect(current_path).to eq new_user_session_path
+    within '.answers' do
+      expect(page).to_not have_content "some answer"
+      expect(current_path).to eq question_path(question)
+    end
+
 
   end
 
   context "Authenticated user" do
 
-    scenario "creates answers with valid attributes" do
+    scenario "creates answers with valid attributes", js: true do
       log_in(user)
       visit question_path(question)
-      fill_in "Body", with: "some answers"
+      fill_in "Body", with: "some answer"
       click_on "Answer it"
 
-      expect(page).to have_content "some answers"
+      within '.answers' do
+        expect(page).to have_content "some answer"
+      end
       expect(current_path).to eq question_path(question)
-    end
-
-    scenario "tries to create answers with invalid attributes" do
-      log_in(user)
-      visit question_path(question)
-      fill_in "Body", with: ""
-      click_on "Answer it"
-
-      expect(page).to have_content "Body can't be blank"
-      expect(current_path).to eq question_answers_path(question)
     end
 
   end

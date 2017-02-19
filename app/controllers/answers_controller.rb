@@ -3,13 +3,10 @@ class AnswersController < ApplicationController
   before_action :set_question, only:[:create]
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.build(answer_params)
     @answer.user = current_user
     if @answer.save
-      flash[:notice] = "Your answer have been successfully created."
-      redirect_to @question
     else
-      flash[:notice] = "Fail to save the answer."
       render 'questions/show'
     end
   end
