@@ -19,7 +19,6 @@ feature "Authenticated user creates answers", %q{
       expect(current_path).to eq question_path(question)
     end
 
-
   end
 
   context "Authenticated user" do
