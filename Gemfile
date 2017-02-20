@@ -27,6 +27,12 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+gem 'slim-rails'
+gem 'twitter-bootstrap-rails'
+gem 'font-awesome-rails'
+gem 'rails-controller-testing'
+gem 'devise'
+gem "dynamic_form"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -38,19 +44,6 @@ gem 'jbuilder', '~> 2.5'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-
-  gem 'rspec-rails', '~> 3.5'
-
-  gem 'factory_girl_rails'
-
-  gem 'capybara'
-
-  gem 'launchy'
-
-  gem 'selenium-webdriver'
-
-  gem 'database_cleaner'
-
 end
 
 group :development do
@@ -64,19 +57,14 @@ end
 
 group :test do
   gem 'shoulda-matchers', '~> 3.1'
+  gem 'rspec-rails', '~> 3.5'
+  gem 'factory_girl_rails'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'slim-rails'
-
-gem 'twitter-bootstrap-rails'
-
-gem 'font-awesome-rails'
-
-gem 'rails-controller-testing'
-
-gem 'devise'
-
-gem "dynamic_form"
 

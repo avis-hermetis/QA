@@ -1,0 +1,5 @@
+- @question.answers.each do |a|
+  h5
+    = a.body
+    - if a.persisted? && current_user && current_user.author_of?(a)
+      = link_to "Delete", answer_path(a), method: :delete, class: 'btn'

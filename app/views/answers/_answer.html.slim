@@ -1,0 +1,5 @@
+- if @answer.persisted?
+  h5
+    = @answer.body
+    - if current_user && current_user.author_of?(@answer)
+      = link_to "Delete", answer_path(@answer), method: :delete, class: 'btn'
