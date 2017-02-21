@@ -14,7 +14,7 @@ feature "Authenticated user creates answers", %q{
     fill_in "Body", with: "some answer"
     click_on "Answer it"
 
-    within '.answers' do
+    within ".answers" do
       expect(page).to_not have_content "some answer"
       expect(current_path).to eq question_path(question)
     end
@@ -29,7 +29,7 @@ feature "Authenticated user creates answers", %q{
       fill_in "Body", with: "some answer"
       click_on "Answer it"
 
-      within '.answers' do
+      within ".answers" do
         expect(page).to have_content "some answer"
       end
       expect(current_path).to eq question_path(question)
