@@ -7,7 +7,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #create' do
 
     it 'Unauthenticated user get response with unathorized(401) status' do
-      post :create, params: {question_id: question, answer: attributes_for(:invalid_question), format: :js}
+      post :create, params: {question_id: question, answer: attributes_for(:answer), format: :js}
       expect(response).to have_http_status(401)
     end
 
@@ -36,8 +36,8 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'renders question show view' do
-        post :create, params: {question_id: question, answer: attributes_for(:invalid_question), format: :js}
-        expect(response).to render_template 'questions/show'
+        post :create, params: {question_id: question, answer: attributes_for(:invalid_answer), format: :js}
+        expect(response).to render_template 'answers/create'
       end
     end
   end
@@ -68,6 +68,57 @@ RSpec.describe AnswersController, type: :controller do
         delete :destroy, params: {id: answer}
         expect(response).to redirect_to question_path(answer.question)
       end
+    end
+
+  end
+
+  describe "PATCH #update" do
+
+    context "User is the author of answer" do
+      sign_in_user
+      let!(:answer) { create(:answer, user: @user) }
+
+      it "updates requested answers in the db with new body attrubute" do
+        expect{ patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js}.to_not change(Answer, :count)
+        expect(assigns(:answer).body).to eq answer.body
+      end
+      it "render update template" do
+        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}
+        expect(response).to render_template :update
+      end
+    end
+
+    context "User is NOT the author of answer" do
+      sign_in_user
+      let!(:answer) { create(:answer) }
+
+      it "failes to update requested answers from the db" do
+        expect{patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js}.to_not change(Answer, :count)
+        expect(assigns(:answer).body).to_not eq answer.body
+      end
+      it "redirects to questions show view" do
+        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js
+        expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
+
+    context "User enter invalid attributes" do
+      sign_in_user
+      let!(:answer) { create(:answer, user: @user) }
+
+      it "does not update the answer in the db" do
+        expect{patch :update, params: {id: answer, question_id: question, answer: attributes_for(:invalid_answer)}, format: :js}.to_not change(Answer, :count)
+      end
+      it "renders questions show view" do
+        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:invalid_answer)}, format: :js
+        expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
+    it 'Unauthenticated user get response with unathorized(401) status' do
+      patch :update, params: {id: question.answers.last, question_id: question, answer: attributes_for(:answer), format: :js}
+      expect(response).to have_http_status(401)
     end
 
   end
