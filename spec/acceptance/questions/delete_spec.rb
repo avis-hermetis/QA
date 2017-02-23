@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance/acceptance_helper'
 
 feature "User deletes his questions", %q{
   In order to delete his questions

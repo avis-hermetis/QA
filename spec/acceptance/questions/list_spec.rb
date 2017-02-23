@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance/acceptance_helper'
 
 feature "User see the list of questions", %q{
   In order to choose questions

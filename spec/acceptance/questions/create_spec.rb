@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance/acceptance_helper'
 
 feature "Authenticated user creates questions", %q{
   In order to share tmy problem with the community

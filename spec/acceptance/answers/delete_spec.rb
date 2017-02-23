@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance/acceptance_helper'
 
 feature "Authenticated user deletes answers", %q{
   In order to dispode of the wrong answers
