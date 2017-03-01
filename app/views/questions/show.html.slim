@@ -1,9 +1,7 @@
-
-h2
-  = @question.title
-hr
-h4
-  = @question.body
+= render @question
+= link_to "Edit", '#', class: "question-edit-link", data: {question_id: @question.id}
+= render 'form'
+br
 hr
 = render 'answers/form'
 br

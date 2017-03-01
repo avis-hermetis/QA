@@ -9,6 +9,6 @@ ready = ->
     answer_id = $(this).data('answerId')
     $('form#answer-edit-'+ answer_id).show()
 
-$(document).on('ready', ready)
+$(document).ready(ready)
 $(document).on('page:load', ready)
 $(document).on('page:update', ready)
