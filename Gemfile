@@ -33,6 +33,7 @@ gem 'font-awesome-rails'
 gem 'rails-controller-testing'
 gem 'devise'
 gem "dynamic_form"
+gem 'jquery-turbolinks'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

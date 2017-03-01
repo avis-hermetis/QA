@@ -1,5 +1,15 @@
-- if @answer.persisted?
-  h5
-    = @answer.body
-    - if current_user && current_user.author_of?(@answer)
-      = link_to "Delete", answer_path(@answer), method: :delete, class: 'btn'
+-if answer.persisted?
+  div class="answer" id = "answer-#{answer.id}"
+    p = answer.body
+    - if user_signed_in? && current_user.author_of?(answer)
+      .del-link= link_to "Delete", answer_path(answer), method: :delete, class: 'btn'
+      = link_to 'Edit', '#', class: 'btn answer-edit-link',  data: {answer_id: answer.id}
+  .answer-edit-form
+    = form_for [@question, answer], remote: true, url: answer_path(answer), method: :patch, html: {id: "answer-edit-#{answer.id}"} do |f|
+      = f.label :body
+      br
+      .answer-errors
+      = f.text_area :body
+      br
+      = f.submit 'Update answer'
+

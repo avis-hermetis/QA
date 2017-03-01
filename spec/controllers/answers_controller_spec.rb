@@ -78,7 +78,10 @@ RSpec.describe AnswersController, type: :controller do
       sign_in_user
       let!(:answer) { create(:answer, user: @user) }
 
-      it "updates requested answers in the db with new body attrubute" do
+      it "assigns requested answer to the @answer variable" do
+
+      end
+      it "saves the changes in the db" do
         expect{ patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js}.to_not change(Answer, :count)
         expect(assigns(:answer).body).to eq answer.body
       end

@@ -1,9 +1,9 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: [:create, :destroy]
-  before_action :set_question, only:[:create]
+  before_action :authenticate_user!, only: [:create, :destroy, :update]
+  before_action :set_question, only:[:create,]
 
   def create
-    @answer = @question.answers.build(answer_params)
+    @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     @answer.save
   end
@@ -17,6 +17,12 @@ class AnswersController < ApplicationController
       notice = "Other user's answer can't be deleted."
     end
     redirect_to answer.question, notice: notice
+  end
+
+  def update
+    @answer = Answer.find(params[:id])
+    @question = @answer.question
+    @answer.update(answer_params) if current_user.author_of?(@answer)
   end
 
   private
