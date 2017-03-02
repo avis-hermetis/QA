@@ -26,7 +26,7 @@ class QuestionsController < ApplicationController
       redirect_to @question
     else
       flash[:notice] = "Fail to save the question."
-      render :new
+      render 'answers/check_best'
     end
   end
 
