@@ -15,7 +15,9 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question.update(question_params) if current_user.try(:author_of?, @question)
+    if current_user.try(:author_of?, @question)
+      @question.update(question_params)
+    end
   end
 
 
@@ -26,7 +28,7 @@ class QuestionsController < ApplicationController
       redirect_to @question
     else
       flash[:notice] = "Fail to save the question."
-      render 'answers/check_best'
+      render :new
     end
   end
 

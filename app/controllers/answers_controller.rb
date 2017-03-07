@@ -9,26 +9,21 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer = Answer.find(params[:id])
-    if current_user.author_of?(answer)
-      answer.destroy
-      notice = "Your answer have been successfully deleted."
+    @answer = Answer.find(params[:id])
+    if current_user.try(:author_of?, @answer)
+      @answer.destroy
     else
-      notice = "Other user's answer can't be deleted."
     end
-    redirect_to answer.question, notice: notice
   end
 
   def update
     @answer = Answer.find(params[:id])
-    @question = @answer.question
-    @answer.update(answer_params) if current_user.author_of?(@answer)
+    @answer.update(answer_params) if current_user.try(:author_of?, @answer)
   end
 
   def check_best
     @answer = Answer.find(params[:id])
-    @question = @answer.question
-    @answer.check_best
+    @answer.check_best if current_user.try(:author_of?, @answer.question)
   end
 
   private

@@ -4,4 +4,5 @@
     <% end %>
   <% else %>
     $('#answer-<%= @answer.id%>' ).replaceWith('<%= j render @answer %>');
+    $('form#answer-edit-<%= @answer.id %>').hide();
   <% end %>

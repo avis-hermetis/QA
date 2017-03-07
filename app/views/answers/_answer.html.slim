@@ -1,20 +1,19 @@
 -if answer.persisted?
-  div class="answer" id = "answer-#{answer.id}"
+  div.answer id = "answer-#{answer.id}"
     p = answer.body
-    p = answer.best.to_s
     - if answer.best?
       p Best answer
-    - if current_user.author_of?(answer.question)
+    - if current_user.try(:author_of?, answer.question)
       = link_to "Choose as best", check_best_answer_path(answer), method: :patch, remote: true, class: 'btn'
     - if user_signed_in? && current_user.author_of?(answer)
-      .del-link= link_to "Delete", answer_path(answer), method: :delete, class: 'btn'
+      .del-link= link_to "Delete", answer_path(answer), method: :delete, remote: true, class: 'btn'
       = link_to 'Edit', '#', class: 'btn answer-edit-link',  data: {answer_id: answer.id}
-  .answer-edit-form
-    = form_for [@question, answer], remote: true, url: answer_path(answer), method: :patch, html: {id: "answer-edit-#{answer.id}"} do |f|
-      = f.label :body
-      br
-      .answer-errors
-      = f.text_area :body
-      br
-      = f.submit 'Update answer'
+    .answer-edit-form
+      = form_for [@question, answer], remote: true, url: answer_path(answer), method: :patch, html: {id: "answer-edit-#{answer.id}"} do |f|
+        = f.label :body, 'Answer'
+        br
+        .answer-errors
+        = f.text_area :body
+        br
+        = f.submit 'Update answer'
 

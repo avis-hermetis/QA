@@ -8,7 +8,7 @@ class Answer < ApplicationRecord
 
   def check_best
     self.transaction do
-      Answer.update_all(best: false)
+      self.question.answers.update_all(best: false)
       self.update!(best: true)
     end
   end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
+  let!(:question) { create(:question) }
 
 
   describe 'POST #create' do
@@ -49,11 +49,11 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, user: @user) }
 
       it "deletes requested answers from the db" do
-        expect{delete :destroy, params: {id: answer}}.to change(Answer, :count).by(-1)
+        expect{delete :destroy, params: {id: answer}, format: :js}.to change(Answer, :count).by(-1)
       end
-      it "redirects to questions show view" do
-        delete :destroy, params: {id: answer}
-        expect(response).to redirect_to question_path(answer.question)
+      it "render destroy template " do
+        delete :destroy, params: {id: answer, format: :js}
+        expect(response).to render_template :destroy
       end
     end
 
@@ -62,11 +62,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it "failes to delete requested answers from the db" do
-        expect{delete :destroy, params: {id: answer}}.to_not change(Answer, :count)
-      end
-      it "redirects to questions show view" do
-        delete :destroy, params: {id: answer}
-        expect(response).to redirect_to question_path(answer.question)
+        expect{delete :destroy, params: {id: answer}, format: :js}.to_not change(Answer, :count)
       end
     end
 
@@ -76,54 +72,43 @@ RSpec.describe AnswersController, type: :controller do
 
     context "User is the author of answer" do
       sign_in_user
-      let!(:answer) { create(:answer, user: @user) }
+      let!(:answer) { create(:answer, user: @user, question: question) }
 
       it "assigns requested answer to the @answer variable" do
-
+        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer), format: :js}
+        expect(assigns(:answer)).to eq answer
       end
-      it "saves the changes in the db" do
-        expect{ patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js}.to_not change(Answer, :count)
-        expect(assigns(:answer).body).to eq answer.body
+      it "changes answer attrivutes" do
+        patch :update, params: {id: answer, question_id: question, answer: {body: 'new body'}, format: :js}
+        answer.reload
+        expect(answer.body).to eq 'new body'
       end
       it "render update template" do
-        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}
+        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer), format: :js}
         expect(response).to render_template :update
       end
     end
 
     context "User is NOT the author of answer" do
       sign_in_user
-      let!(:answer) { create(:answer) }
+      let!(:answer) { create(:answer, question: question) }
 
-      it "failes to update requested answers from the db" do
-        expect{patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js}.to_not change(Answer, :count)
-        expect(assigns(:answer).body).to_not eq answer.body
-      end
-      it "redirects to questions show view" do
-        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer)}, format: :js
-        expect(response).to redirect_to question_path(answer.question)
+      it "failes to change answer attributes" do
+        patch :update, params: {id: answer, question_id: question, answer: {body: 'new body'}, format: :js}
+        answer.reload
+        expect(answer.body).to_not eq 'new body'
       end
     end
 
+  end
 
-    context "User enter invalid attributes" do
-      sign_in_user
-      let!(:answer) { create(:answer, user: @user) }
-
-      it "does not update the answer in the db" do
-        expect{patch :update, params: {id: answer, question_id: question, answer: attributes_for(:invalid_answer)}, format: :js}.to_not change(Answer, :count)
+  describe 'PATCH #check_best' do
+    sign_in_user
+    let!(:answer) { create(:answer) }
+    it "assigns requested answer to the @answer variable" do
+        patch :check_best, params: {id: answer}, format: :js
+        expect(assigns(:answer)).to eq answer
       end
-      it "renders questions show view" do
-        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:invalid_answer)}, format: :js
-        expect(response).to redirect_to question_path(answer.question)
-      end
-    end
-
-    it 'Unauthenticated user get response with unathorized(401) status' do
-      patch :update, params: {id: question.answers.last, question_id: question, answer: attributes_for(:answer), format: :js}
-      expect(response).to have_http_status(401)
-    end
-
   end
 end
 

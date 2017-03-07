@@ -105,7 +105,41 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to questions_path
       end
     end
+  end
+
+  describe "PATCH #update" do
+
+    context "User is the author of question" do
+      sign_in_user
+      let!(:question) { create(:question, user: @user) }
+
+      it "assigns requested question to the @question variable" do
+        patch :update, params: {id: question, question: attributes_for(:question), format: :js}
+        expect(assigns(:question)).to eq question
+      end
+      it "changes question attributes" do
+        patch :update, params: {id: question, question: {title: 'new title', body: 'new body'}, format: :js}
+        question.reload
+        expect(question.title).to eq 'new title'
+        expect(question.body).to eq 'new body'
+      end
+      it "render update template" do
+        patch :update, params: {id: question, question: attributes_for(:question), format: :js}
+        expect(response).to render_template :update
+      end
+    end
+
+    context "User is NOT the author of question" do
+      sign_in_user
+
+      it "failes to change answer attrivutes" do
+        patch :update, params: {id: question, question: {body: 'new body'}, format: :js}
+        question.reload
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
+      end
     end
   end
+end
 
 

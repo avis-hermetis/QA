@@ -6,5 +6,5 @@ module AcceptanceMacros
     click_on "Log in"
   end
 
-  Capybara.default_wait_time = 5
+  Capybara.default_max_wait_time = 5
 end

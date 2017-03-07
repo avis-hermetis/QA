@@ -1,64 +1,48 @@
 require 'acceptance/acceptance_helper'
 
-feature "Authenticated user updates answer", %q{
-  In order to change my answer
+feature 'User edits answer', %q{
+  In order to fix mistake
   As an authenticated user
-  I want to be able to update the answer
+  I want to be able to edit answer for question
 } do
-  let(:user) {create(:user)}
-  let(:question) {create(:question)}
-  let(:answer) {create(:answer, user: user, question: question)}
+  given!(:user) { create(:user) }
+  given!(:other_user) { create(:user) }
+  given!(:question) { create(:question) }
+  given!(:answer) { create(:answer, question: question, user: user) }
+  given!(:other_user_answer) { create(:answer, question: question, user: other_user) }
 
-  scenario "Not authenticated user does not see the Edit' button" do
-    visit question_path(question)
-
-    within '.answers' do
-      expect(page).to have_content answer.body
-      expect(page).to_not have_link 'Edit'
-    end
-  end
-
-  context "Authenticated user, author of answer" do
+  context 'Authenticated user' do
     before do
-      log_in(user)
-      visit question_path(question)
+      log_in user
+      visit question_path question
     end
 
-    scenario "edits his answer with valid attributes" do
-      fill_in "Text", with: "edited answer"
-      click_on "Edit"
-
-      within '.answers' do
-        expect(page).to have_content 'edited answer'
-        expect(page).to_not have_selector 'answer-edit-form'
-      end
-    end
-
-    scenario "failes to edit his answer with invalid attribute" do
-      within '.answers' do
-        click_on "Edit"
-
-        expect(page).to have_content "Body can't be blank"
-        expect(page).to have_selector 'answer-edit-form'
-      end
-    end
-  end
-
-  context "Authenticated user, other then the author of answer"do
-    let(:other_user) {create(:user)}
-    let(:answer) {create(:answer, user: other_user, question: question)}
-
-    scenario "failes to edit the answer" do
-
-
-      log_in(user)
-      visit question_path(question)
-
-      within '.answers' do
-        expect(page).to have_content answer.body
+    scenario 'tries to edit other user`s` answer.', js: true do
+      within "#answer-#{other_user_answer.id}" do
         expect(page).to_not have_link 'Edit'
       end
     end
+
+
+    scenario 'tries to edit his answer.', js: true do
+      click_link 'Edit'
+      within "#answer-#{answer.id}" do
+        fill_in 'Answer', with: 'edited answer'
+        click_on 'Update answer'
+        expect(page).to_not have_content answer.body
+        expect(page).to have_content 'edited answer'
+        expect(page).to_not have_selector 'textarea'
+      end
+    end
+
+
   end
 
+  context 'Not authenticated user' do
+    scenario 'do not see the Edit link', js: true do
+      visit question_path question
+
+      expect(page).to_not have_link 'Edit'
+    end
+  end
 end
