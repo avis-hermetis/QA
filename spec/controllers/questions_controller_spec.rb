@@ -123,6 +123,12 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
       end
+      it "failes to change question with invalid attributes" do
+        patch :update, params: {id: question, question: {title: '', body: ''}, format: :js}
+        question.reload
+        expect(question.title).to_not eq ''
+        expect(question.body).to_not eq ''
+      end
       it "render update template" do
         patch :update, params: {id: question, question: attributes_for(:question), format: :js}
         expect(response).to render_template :update

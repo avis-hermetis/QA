@@ -78,10 +78,15 @@ RSpec.describe AnswersController, type: :controller do
         patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer), format: :js}
         expect(assigns(:answer)).to eq answer
       end
-      it "changes answer attrivutes" do
+      it "changes answer attributes" do
         patch :update, params: {id: answer, question_id: question, answer: {body: 'new body'}, format: :js}
         answer.reload
         expect(answer.body).to eq 'new body'
+      end
+      it "failes to change answer with invalid attributes" do
+        patch :update, params: {id: answer, question_id: question, answer: {body: ''}, format: :js}
+        answer.reload
+        expect(answer.body).to_not eq ''
       end
       it "render update template" do
         patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer), format: :js}
@@ -98,17 +103,38 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
         expect(answer.body).to_not eq 'new body'
       end
+
+      it "render update template" do
+        patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer), format: :js}
+        expect(response).to render_template :update
+      end
     end
 
   end
 
   describe 'PATCH #check_best' do
-    sign_in_user
-    let!(:answer) { create(:answer) }
+    let!(:question) { create(:question) }
+    let!(:answer) { create(:answer, question: question) }
+
+    before do
+      sign_in answer.question.user
+    end
+
     it "assigns requested answer to the @answer variable" do
         patch :check_best, params: {id: answer}, format: :js
         expect(assigns(:answer)).to eq answer
-      end
+    end
+
+    it "set answer as best" do
+      patch :check_best, params: {id: answer}, format: :js
+      answer.reload
+      expect(answer).to  be_best
+    end
+
+    it "renders check_best  template" do
+      patch :check_best, params: {id: answer}, format: :js
+      expect(response).to render_template :check_best
+    end
   end
 end
 

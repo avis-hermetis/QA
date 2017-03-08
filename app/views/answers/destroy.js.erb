@@ -1,1 +1,4 @@
-$("#answer-<%= @answer.id %>").remove();
+<% if current_user&.author_of?(@answer) %>
+  $("#answer-<%= @answer.id %>").remove();
+<% else %>
+<% end %>

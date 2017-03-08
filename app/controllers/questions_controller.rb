@@ -15,9 +15,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if current_user.try(:author_of?, @question)
-      @question.update(question_params)
-    end
+    @question.update(question_params) if current_user&.author_of?(@question)
   end
 
 
@@ -33,7 +31,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(@question)
+    if current_user&.author_of?(@question)
       @question.destroy
       flash[:notice] = "Your question have been successfully deleted."
     else

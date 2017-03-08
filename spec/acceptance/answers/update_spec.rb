@@ -17,7 +17,7 @@ feature 'User edits answer', %q{
       visit question_path question
     end
 
-    scenario 'tries to edit other user`s` answer.', js: true do
+    scenario "tries to edit other user's answer", js: true do
       within "#answer-#{other_user_answer.id}" do
         expect(page).to_not have_link 'Edit'
       end
@@ -26,6 +26,7 @@ feature 'User edits answer', %q{
 
     scenario 'tries to edit his answer.', js: true do
       click_link 'Edit'
+
       within "#answer-#{answer.id}" do
         fill_in 'Answer', with: 'edited answer'
         click_on 'Update answer'

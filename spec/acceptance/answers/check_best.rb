@@ -9,7 +9,7 @@ feature 'User selects answer as best answer', %q{
   given!(:other_user) {create(:user)}
   given!(:question) {create(:question, user: user)}
   given!(:other_user_question) {create(:question, user: other_user)}
-  given!(:answer) {create(:answer, question: question)}
+  given!(:answers) {create_list(:answer, 3, question: question)}
 
 
   scenario 'The author of the question select the best answer for his question', js: true do
@@ -38,9 +38,8 @@ feature 'User selects answer as best answer', %q{
   scenario 'The best answer is rendered first', js: true do
     sign_in user
     visit question_path question
-    click_on 'Choose as Best'
 
-    within "#answer-#{answer.id}"  do
+    within "#answer-#{answers.last.id}"  do
       click_on 'Choose as Best'
     end
 
