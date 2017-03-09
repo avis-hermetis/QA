@@ -64,6 +64,11 @@ RSpec.describe AnswersController, type: :controller do
       it "failes to delete requested answers from the db" do
         expect{delete :destroy, params: {id: answer}, format: :js}.to_not change(Answer, :count)
       end
+      it "render status 403 without template " do
+        delete :destroy, params: {id: answer, format: :js}
+        expect(response).to_not render_template :destroy
+        expect(response).to have_http_status(403)
+      end
     end
 
   end
@@ -104,9 +109,10 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to_not eq 'new body'
       end
 
-      it "render update template" do
+      it "render status 403 without template" do
         patch :update, params: {id: answer, question_id: question, answer: attributes_for(:answer), format: :js}
-        expect(response).to render_template :update
+        expect(response).to_not render_template :update
+        expect(response).to have_http_status(403)
       end
     end
 
@@ -116,24 +122,45 @@ RSpec.describe AnswersController, type: :controller do
     let!(:question) { create(:question) }
     let!(:answer) { create(:answer, question: question) }
 
-    before do
-      sign_in answer.question.user
-    end
+    context 'user is the author of question' do
+      before do
+        sign_in answer.question.user
+      end
 
-    it "assigns requested answer to the @answer variable" do
+      it "assigns requested answer to the @answer variable" do
         patch :check_best, params: {id: answer}, format: :js
         expect(assigns(:answer)).to eq answer
-    end
+      end
 
-    it "set answer as best" do
-      patch :check_best, params: {id: answer}, format: :js
-      answer.reload
-      expect(answer).to  be_best
-    end
+      it "set answer as best" do
+        patch :check_best, params: {id: answer}, format: :js
+        answer.reload
+        expect(answer).to  be_best
+      end
 
-    it "renders check_best  template" do
-      patch :check_best, params: {id: answer}, format: :js
-      expect(response).to render_template :check_best
+      it "renders check_best  template" do
+        patch :check_best, params: {id: answer}, format: :js
+        expect(response).to render_template :check_best
+      end
+    end
+    context 'user is NOT the author of question' do
+      let(:user) {create(:user)}
+
+      before do
+        sign_in user
+      end
+
+      it "fails to set answer as best" do
+        patch :check_best, params: {id: answer}, format: :js
+        answer.reload
+        expect(answer).to_not  be_best
+      end
+
+      it "renders check_best  template" do
+        patch :check_best, params: {id: answer}, format: :js
+        expect(response).to_not render_template :check_best
+        expect(response).to have_http_status(403)
+      end
     end
   end
 end

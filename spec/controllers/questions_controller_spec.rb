@@ -138,7 +138,7 @@ RSpec.describe QuestionsController, type: :controller do
     context "User is NOT the author of question" do
       sign_in_user
 
-      it "failes to change answer attrivutes" do
+      it "failes to change question attributes" do
         patch :update, params: {id: question, question: {body: 'new body'}, format: :js}
         question.reload
         expect(question.title).to_not eq 'new title'

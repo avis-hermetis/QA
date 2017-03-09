@@ -13,15 +13,24 @@ class AnswersController < ApplicationController
     if current_user&.author_of?(@answer)
       @answer.destroy
     else
+      head 403
     end
   end
 
   def update
-    @answer.update(answer_params) if current_user&.author_of?(@answer)
+    if current_user&.author_of?(@answer)
+      @answer.update(answer_params)
+    else
+      head 403
+    end
   end
 
   def check_best
-    @answer.check_best if current_user&.author_of?(@answer.question)
+    if current_user&.author_of?(@answer.question)
+      @answer.check_best
+    else
+      head 403
+    end
   end
 
   private

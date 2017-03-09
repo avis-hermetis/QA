@@ -2,7 +2,7 @@
   <% @answer.errors.full_messages.each do |message|%>
     $('.answer-errors').html('<%= j message %>');
     <% end %>
-  <% else %>
+<% else %>
     $('#answer-<%= @answer.id%>' ).replaceWith('<%= j render @answer %>');
     $('form#answer-edit-<%= @answer.id %>').hide();
-  <% end %>
+<% end %>
