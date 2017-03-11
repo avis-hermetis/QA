@@ -34,6 +34,9 @@ gem 'rails-controller-testing'
 gem 'devise'
 gem "dynamic_form"
 gem 'jquery-turbolinks'
+gem 'carrierwave'
+gem 'remotipart'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
