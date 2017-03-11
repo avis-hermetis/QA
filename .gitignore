@@ -19,3 +19,29 @@
 .idea
 
 config/database.yml
+
+# Ignore uploaded files
+/public/system
+/public/tmp
+/public/uploads
+/public/spec
+
+# Mac OS files
+.DS_Store
+
+# coverage files
+/coverage
+
+.powrc
+
+*.sublime-project
+*.sublime-workspace
+certs/
+
+.yardoc
+/log
+.powenv
+
+# Ignore application configuration
+/config/application.yml
+.zeus.sock
