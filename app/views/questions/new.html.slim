@@ -1,12 +1,2 @@
-= form_for @question do |f|
-  = f.error_messages
-  = f.label :title
-  br
-  = f.text_field :title, errors: true
-  hr
-  = f.label :body
-  br
-  = f.text_area :body
-  br
-  = f.submit "Create"
+= render 'form'
 
