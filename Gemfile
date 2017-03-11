@@ -36,6 +36,7 @@ gem "dynamic_form"
 gem 'jquery-turbolinks'
 gem 'carrierwave'
 gem 'remotipart'
+gem 'cocoon'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
