@@ -1,15 +1,14 @@
-div id = "question-#{@question.id}"
+div id = "question-#{question.id}"
   h2
-    = @question.title
+    = question.title
   hr
   h4
-    = @question.body
+    = question.body
   p
   p Attachments:
   ul
-    - @question.attachments.each do |a|
-      li= link_to "#{a.file.filename}", a.file.url
+    = render question.attachments
   br
   - if current_user&.author_of?(@question)
     = link_to "Edit", '#', class: "question-edit-link", data: {question_id: @question.id}
-    = render 'form'
+    = render 'questions/form'

@@ -9,10 +9,12 @@
   br
   = f.text_area :body
   p Attachments:
-  p
+  #files
     = f.fields_for :attachments do |a|
-      = a.label :file
-      = a.file_field :file
+      = render 'attachments/attachment_fields', f: a
+    .links
+      = link_to_add_association 'add file', f, :attachments, partial: 'attachments/attachment_fields'
+
   p
 
   = @question.persisted? ? (f.submit "Update") : (f.submit "Create")
