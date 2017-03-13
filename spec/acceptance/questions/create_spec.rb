@@ -6,6 +6,7 @@ feature "Authenticated user creates questions", %q{
   I want to create a questions
 } do
   given(:user) {create(:user)}
+  given(:question) {create(:question)}
 
   scenario "Not authenticated user tries to create questions" do
     visit questions_path
@@ -19,6 +20,7 @@ feature "Authenticated user creates questions", %q{
 
     scenario "creates question with valid attributes" do
       log_in(user)
+      visit questions_path
       click_on "Ask question"
       fill_in "Title", with: "questions title"
       fill_in "Body", with: "some text"

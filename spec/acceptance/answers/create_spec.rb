@@ -12,7 +12,7 @@ feature "Authenticated user creates answers", %q{
     visit question_path(question)
 
     fill_in "Text", with: "some answer"
-    click_on "Answer it"
+    click_on "Create"
 
     within ".answers" do
       expect(page).to_not have_content "some answer"
@@ -27,7 +27,7 @@ feature "Authenticated user creates answers", %q{
       log_in(user)
       visit question_path(question)
       fill_in "Text", with: "some answer"
-      click_on "Answer it"
+      click_on "Create"
 
       within ".answers" do
         expect(page).to have_content "some answer"
@@ -38,7 +38,7 @@ feature "Authenticated user creates answers", %q{
     scenario "creates answer with invalid attributes", js: true do
       log_in(user)
       visit question_path(question)
-      click_on "Answer it"
+      click_on "Create"
 
       within ".answer-errors" do
         expect(page).to have_content "Body can't be blank"

@@ -14,10 +14,11 @@ feature "Authenticated user creates answers with attachments", %q{
     end
     scenario "attaches file to answer", js: true do
       fill_in "Text", with: "some text"
+      click_on 'add file'
       attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
-      click_on "Answer it"
+      click_on "Create"
 
-      within '.answer' do
+      within ".attachment#attachment-1" do
         expect(page).to have_content 'rails_helper.rb'
       end
     end

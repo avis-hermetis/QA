@@ -28,8 +28,8 @@ feature 'User edits answer', %q{
       click_link 'Edit'
 
       within "#answer-#{answer.id}" do
-        fill_in 'Answer', with: 'edited answer'
-        click_on 'Update answer'
+        fill_in 'Text', with: 'edited answer'
+        click_on 'Update'
         expect(page).to_not have_content answer.body
         expect(page).to have_content 'edited answer'
         expect(page).to_not have_selector 'textarea'
