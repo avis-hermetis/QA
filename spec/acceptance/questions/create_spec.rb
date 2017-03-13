@@ -24,6 +24,7 @@ feature "Authenticated user creates questions", %q{
       click_on "Ask question"
       fill_in "Title", with: "questions title"
       fill_in "Body", with: "some text"
+      attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
       click_on "Create"
 
       expect(page).to have_content "Your question have been successfully created."
