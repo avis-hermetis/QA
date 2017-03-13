@@ -14,7 +14,5 @@
       = render 'attachments/attachment_fields', f: a
     .links
       = link_to_add_association 'add file', f, :attachments, partial: 'attachments/attachment_fields'
-
   p
-
-  = @question.persisted? ? (f.submit "Update") : (f.submit "Create")
+    = @question.persisted? ? (f.submit "Update") : (f.submit "Create")

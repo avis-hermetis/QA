@@ -3,8 +3,7 @@
     p = answer.body
     p Attachments:
     ul
-      - answer.attachments.each do |a|
-        li= link_to "#{a.file.filename}", a.file.url
+      = render answer.attachments
     - if answer.best?
       p Best answer
     - if current_user&.author_of?(answer.question)
@@ -13,16 +12,5 @@
       .del-link= link_to "Delete", answer_path(answer), method: :delete, remote: true, class: 'btn'
       = link_to 'Edit', '#', class: 'btn answer-edit-link',  data: {answer_id: answer.id}
     .answer-edit-form
-      = form_for [@question, answer], remote: true, url: answer_path(answer), method: :patch, html: {id: "answer-edit-#{answer.id}"} do |f|
-        = f.label :body, 'Answer'
-        br
-        .answer-errors
-        = f.text_area :body
-        p Attachments:
-        p
-          = f.fields_for :attachments do |a|
-            = a.label :file
-            = a.file_field :file
-        br
-        = f.submit 'Update answer'
+      = render partial: 'answers/form', object: answer
 

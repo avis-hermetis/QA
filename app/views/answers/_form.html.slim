@@ -1,12 +1,14 @@
-= form_for [@question, @answer], remote: true do |f|
+- object = form.persisted? ? form : [@question, @question.answers.build]
+= form_for object, remote: true, html: {id: "answer-edit-#{form.id}"}  do |f|
   = f.label :body, 'Text'
   br
   .answer-errors
   = f.text_area :body
   p Attachments:
-  p
+  #files
     = f.fields_for :attachments do |a|
-      = a.label :file
-      = a.file_field :file
-  br
-  = f.submit "Answer it"
+      = render 'attachments/attachment_fields', f: a
+    .links
+      = link_to_add_association 'add file', f, :attachments, partial: 'attachments/attachment_fields'
+  p
+    = form.persisted? ? (f.submit "Update") : (f.submit "Create")
