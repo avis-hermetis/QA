@@ -1,3 +1,4 @@
+
 require 'acceptance/acceptance_helper'
 
 feature "Authenticated user creates answers with attachments", %q{
@@ -16,9 +17,14 @@ feature "Authenticated user creates answers with attachments", %q{
       fill_in "Text", with: "some text"
       click_on 'add file'
       attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
+      click_on 'add file'
+      page.find('.file-form:nth-of-type(2)').attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
+
+
       click_on "Create"
 
-      within ".attachment#attachment-1" do
+      within ".attachment" do
+        expect(page).to have_content 'rails_helper.rb'
         expect(page).to have_content 'rails_helper.rb'
       end
     end

@@ -9,7 +9,7 @@
   br
   = f.text_area :body
   p Attachments:
-  #files
+  .attachment-field
     = f.fields_for :attachments do |a|
       = render 'attachments/attachment_fields', f: a
     .links

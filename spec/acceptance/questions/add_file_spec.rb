@@ -12,13 +12,18 @@ feature "Authenticated user creates question with attachments", %q{
       log_in user
       visit new_question_path
     end
-    scenario "attaches file to question" do
+    scenario "attaches file to question", js: true do
       fill_in "Title", with: "questions title"
       fill_in "Body", with: "some text"
-      attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
-      click_on "Create"
 
-      expect(page).to have_content 'spec_helper.rb'
+      attach_file('File', "#{Rails.root}/spec/spec_helper.rb")
+      click_on 'add file'
+      page.all('.nested-fields').last.attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
+      click_on 'Create'
+
+
+      expect(page).to have_link('spec_helper.rb')
+      expect(page).to have_link('rails_helper.rb')
     end
   end
 end
