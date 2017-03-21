@@ -67,7 +67,9 @@ group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'database_cleaner'
-  gem 'capybara-webkit'
+  # gem 'capybara-webkit'
+  # gem 'selenium-webdriver'
+  gem 'poltergeist'
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
