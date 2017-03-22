@@ -1,7 +1,8 @@
 class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
-  has_many :attachments, as: :attachable
+
+  include Attachable
 
   validates :body, presence: true
 
