@@ -3,6 +3,7 @@ class Question < ApplicationRecord
   belongs_to :user
 
   include Attachable
+  include Votable
 
   validates :title, :body, presence: true
 
