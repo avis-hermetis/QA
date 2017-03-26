@@ -8,6 +8,8 @@ div id = "question-#{question.id}"
   p Attachments:
   ul
     = render question.attachments
+  p.vote
+    = render partial: 'votes/vote', locals: {votable: @question}
   br
   - if current_user&.author_of?(@question)
     = link_to "Edit", '#', class: "question-edit-link", data: {question_id: @question.id}

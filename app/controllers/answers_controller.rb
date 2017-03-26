@@ -1,7 +1,9 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create, :destroy, :update]
   before_action :set_question, only:[:create]
-  before_action :set_answer, only: [:destroy, :update, :check_best]
+  before_action :set_answer, only: [:destroy, :update, :check_best, :vote]
+
+  respond_to :json, only: :vote
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -33,7 +35,18 @@ class AnswersController < ApplicationController
     end
   end
 
+  def vote
+    vote = @answer.vote(params[:vote], current_user)
+    respond_with(vote, location: @answer)
+  end
+
+
   private
+  def check_vote
+    if params[:vote].blank? || !%w(up down).includes?(params[:vote])
+      render json: {errors: ["invalid vote for answer #{@answer.id}"]}, status: 422
+    end
+  end
 
   def set_question
     @question = Question.find(params[:question_id])
