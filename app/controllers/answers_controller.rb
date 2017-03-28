@@ -37,11 +37,12 @@ class AnswersController < ApplicationController
   end
 
   def vote
-    rating = @answer.vote(params[:vote], current_user)
-    puts rating
-    respond_with(vote, location: @question)
+    if rating = @answer.vote(params[:vote].to_sym, current_user)
+      render json: { rating: rating, id: @answer.id, class: 'answer' }, status: 200
+    else
+      render json: { errors: ["you have already voted"]}, status: 403
+    end
   end
-
 
   private
   def check_vote
