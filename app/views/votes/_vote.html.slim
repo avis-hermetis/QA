@@ -1,10 +1,9 @@
 div.vote-rating
-  p= "Rating: #{votable.rating}
-.vote-linls
-    - if votable.vote_of(current_user) == :up_vote
-      = link_to 'down', polymorphic_path([:vote, votable], vote: :down), method: :patch, remote: true, data: {type: :json}
-    - elsif votable.vote_of(current_user) == :down_vote
-      = link_to 'up', polymorphic_path([:vote, votable], vote: :up), method: :patch, remote: true, data: {type: :json}
-    - else
-      = link_to 'up', polymorphic_path([:vote, votable], vote: :up), method: :patch, remote: true, data: {type: :json}
-      = link_to 'down', polymorphic_path([:vote, votable], vote: :down), method: :patch, remote: true, data: {type: :json}
+  p Rating: #{votable.rating}
+.vote-links
+  = link_to 'up', polymorphic_path([:vote, votable], vote: :up),
+          method: :patch, remote: true, data: {type: :json},
+          class: "vote-up #{votable.class.name.downcase}_", id: "#{"votable.class.name.downcase"}" unless votable.vote_of(current_user) == :up_vote
+  = link_to 'down', polymorphic_path([:vote, votable], vote: :down),
+          method: :patch, remote: true, data: {type: :json},
+          class: 'vote-down' unless votable.vote_of(current_user) == :down_vote

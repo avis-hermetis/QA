@@ -1,8 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :destroy]
   before_action :question_load, only: [:show, :destroy, :update, :vote]
-
-  respond_to :json, only: :vote
+  before_action :check_vote, only: [:vote]
 
   def index
     @questions = Question.all
@@ -45,14 +44,17 @@ class QuestionsController < ApplicationController
   end
 
   def vote
-    @question.vote(params[:vote], current_user)
-
+    if rating = @question.vote(params[:vote].to_sym, current_user)
+      render json: { rating: rating, id: @question.id, class: 'question' }, status: 200
+    else
+      render json: { errors: ["you have already voted"]}, status: 403
+    end
   end
 
   private
 
   def check_vote
-    if params[:vote].blank? || !%w(up down).includes?(params[:vote])
+    if params[:vote].blank? || !%w(up down).include?(params[:vote])
       render json: {errors: ["invalid vote for answer #{@question.id}"]}, status: 422
     end
   end

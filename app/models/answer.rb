@@ -21,20 +21,20 @@ class Answer < ApplicationRecord
   def vote(direction, user)
     transaction do
       if vote = votes.find_by(user_id: user.id)
-        if direction == :up && vote.vote == -1
-          icrement!(:rating, by = 1)
-          return vote.destroy
-        elsif direction == :up && vote.vote == 1
+        if direction == :up && vote.value == -1
+          increment!(:rating, by = 1)
+          vote.destroy && rating
+        elsif direction == :down && vote.value == 1
           decrement!(:rating, by = 1)
-          return vote.destroy
+          vote.destroy && rating
         end
       else
         if direction == :up
           increment!(:rating, by = 1)
-          return votes.create(user_id: user.id, value: 1)
+          votes.create(user_id: user.id, value: 1) && rating
         elsif direction == :down
           decrement!(:rating, by = 1)
-          return votes.create(user_id: user.id, value: -1)
+          votes.create(user_id: user.id, value: -1) && rating
         end
       end
     end
@@ -43,12 +43,12 @@ class Answer < ApplicationRecord
   def vote_of(user)
     if vote = votes.find_by(user_id: user.id)
       if vote.value == 1
-        return :up_vote
+        :up_vote
       elsif vote.value == -1
-        return :down_vote
+        :down_vote
       end
     else
-      return :no_vote
+      :no_vote
     end
   end
 end

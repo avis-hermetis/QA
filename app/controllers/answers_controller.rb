@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create, :destroy, :update]
   before_action :set_question, only:[:create]
   before_action :set_answer, only: [:destroy, :update, :check_best, :vote]
+  before_action :check_vote, only: [:vote]
 
   respond_to :json, only: :vote
 
@@ -36,14 +37,15 @@ class AnswersController < ApplicationController
   end
 
   def vote
-    vote = @answer.vote(params[:vote], current_user)
-    respond_with(vote, location: @answer)
+    rating = @answer.vote(params[:vote], current_user)
+    puts rating
+    respond_with(vote, location: @question)
   end
 
 
   private
   def check_vote
-    if params[:vote].blank? || !%w(up down).includes?(params[:vote])
+    if params[:vote].blank? || !%w(up down).include?(params[:vote])
       render json: {errors: ["invalid vote for answer #{@answer.id}"]}, status: 422
     end
   end
