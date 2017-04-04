@@ -3,7 +3,7 @@ div.vote-rating
 .vote-links
   = link_to 'up', polymorphic_path([:vote, votable], vote: :up),
           method: :patch, remote: true, data: {type: :json},
-          class: "vote-up #{votable.class.name.downcase}_", id: "#{"votable.class.name.downcase"}" unless votable.vote_of(current_user) == :up_vote
+          class: "vote-up" unless votable.vote_of(current_user) == :up_vote
   = link_to 'down', polymorphic_path([:vote, votable], vote: :down),
           method: :patch, remote: true, data: {type: :json},
-          class: 'vote-down' unless votable.vote_of(current_user) == :down_vote
+          class: "vote-down" unless votable.vote_of(current_user) == :down_vote
