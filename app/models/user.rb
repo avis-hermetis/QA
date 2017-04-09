@@ -10,14 +10,5 @@ class User < ApplicationRecord
   def author_of?(obj)
     id == obj.user_id
   end
-
-  def voted_for?(obj)
-    obj.votes.each do |v|
-      if v.id == id
-        return v
-      else
-        return nil
-      end
-    end
-  end
+  
 end

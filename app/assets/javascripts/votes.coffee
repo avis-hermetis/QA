@@ -12,5 +12,14 @@
   #.on 'ajax:success', '.vote-up, .vote-down', Vote.renderRating
 
 ready ->
-  $(".vote-up, .vote-down").bind 'ajax:success', (e, data, status, xhr) ->
-    votable = xhr.responseJSON
+  xhr = XMLHttpRequest()
+  data = JSON.parse(xhr.responseText)
+
+  $(".vote-up-#{data.class.name.downcase}-#{data.id}").bind 'ajax:success', (e, data, status, xhr) ->
+    $(this).hide()
+    $(".vote-up-#{data.class.name.downcase}-#{data.id}").show
+    $(".vote-rating").attr(data.rating)
+  $(".vote-down-#{data.class.name.downcase}-#{data.id}").bind 'ajax:success', (e, data, status, xhr) ->
+    $(this).hide()
+    $(".vote-up-#{data.class.name.downcase}-#{data.id}").show
+    $(".vote-rating p").attr(data.rating)

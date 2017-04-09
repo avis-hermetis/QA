@@ -38,7 +38,7 @@ class AnswersController < ApplicationController
 
   def vote
     if rating = @answer.vote(params[:vote].to_sym, current_user)
-      render json: { rating: rating, id: @answer.id, class: 'answer' }, status: 200
+      render json: @answer, status: 200
     else
       render json: { errors: ["you have already voted"]}, status: 403
     end
