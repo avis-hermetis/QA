@@ -4,7 +4,7 @@
     p Attachments:
     ul
       = render answer.attachments
-    p.vote
+    p.answer-vote
       = render partial: 'votes/vote', locals: {votable: answer}
     - if answer.best?
       p Best answer

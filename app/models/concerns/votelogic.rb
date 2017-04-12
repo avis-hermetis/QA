@@ -8,18 +8,18 @@ module Votelogic
         if vote = votes.find_by(user_id: user.id)
           if direction == :up && vote.value == -1
             increment!(:rating, by = 1)
-            vote.destroy && rating
+            vote.destroy && vote.value
           elsif direction == :down && vote.value == 1
             decrement!(:rating, by = 1)
-            vote.destroy && rating
+            vote.destroy && vote.value
           end
         else
           if direction == :up
             increment!(:rating, by = 1)
-            votes.create(user_id: user.id, value: 1) && rating
+            votes.create(user_id: user.id, value: 1) && 0
           elsif direction == :down
             decrement!(:rating, by = 1)
-            votes.create(user_id: user.id, value: -1) && rating
+            votes.create(user_id: user.id, value: -1) && 0
           end
         end
       end
