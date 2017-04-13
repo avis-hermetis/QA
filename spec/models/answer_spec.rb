@@ -28,4 +28,23 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
+
+  describe "vote" do
+    let!(:user) {create(:user)}
+    let!(:answer) {create(:answer)}
+
+    it 'increments rating and creates new vote object' do
+      expect{answer.vote(:up, user)}.to change(answer, :rating).by(1)
+    end
+    it 'decrements rating' do
+      expect{answer.vote(:down, user)}.to change {answer.rating}.by(-1)
+    end
+    it 'creates new vote instance' do
+      expect{answer.vote(:up, user)}.to change(Vote, :count).by(1)
+    end
+    it 'deletes existed vote instance' do
+      answer.votes.create(user: user, value: 1)
+      expect{answer.vote(:down, user)}.to change(Vote, :count).by(-1)
+    end
+  end
 end

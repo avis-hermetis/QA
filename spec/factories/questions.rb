@@ -6,6 +6,7 @@ FactoryGirl.define do
     title
     body "MyText"
     user
+    rating 0
   end
 
   factory :invalid_question, class: "Question" do

@@ -156,6 +156,21 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe "PATCH #vote" do
+    sign_in_user
+    let!(:question) { create(:question) }
+
+    it "changes rating" do
+      expect{ patch :vote, params: {id: question, vote: 'up', format: :js} }.to change {question.rating}.by(1)
+
+    end
+    it "assigns new vote value to the value variable" do
+      patch :vote, params: {id: question, vote: 'up', format: :js}
+      expect(assigns(:value)).to eq 1
+    end
+
+  end
 end
 
 

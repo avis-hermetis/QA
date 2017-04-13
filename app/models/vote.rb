@@ -4,6 +4,9 @@ class Vote < ApplicationRecord
 
   validates :user_id, presence: true
   validates :votable_id, presence: true
-  validates :value, inclusion: {in: [-1,1]}
+  validates :votable_type, presence: true
+  validates :votable_type, inclusion: {in: ['Question', 'Answer']}
+  validates :value, presence: true
+  validates :value, inclusion: {in: [-1, 1]}
 
 end
