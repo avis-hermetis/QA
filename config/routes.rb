@@ -4,10 +4,14 @@ Rails.application.routes.draw do
   root to: "questions#index"
 
   resources :questions do
+    patch :vote, on: :member
     resources :answers, shallow: true do
       patch :check_best, on: :member
+      patch :vote, on: :member
     end
   end
 
   resources :attachments, only: [:destroy]
+
+
 end

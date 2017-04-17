@@ -2,7 +2,7 @@
 - @questions.each do |q|
   h5
     = link_to "#{q.title}", question_path(q)
-    br
+  p
     - if current_user&.author_of?(q)
       = link_to "Delete", question_path(q), method: :delete, class: "btn"
   hr

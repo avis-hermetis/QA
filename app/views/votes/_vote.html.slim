@@ -1,0 +1,11 @@
+.vote-rating
+  = 'Rating: '
+  span.score #{votable.rating}
+.vote-links
+  = link_to 'up', polymorphic_path([:vote, votable], vote: :up),
+          method: :patch, remote: true, data: {type: :json},
+          class: "vote-up" unless votable.vote_value(current_user) == 1
+  | &nbsp;
+  = link_to 'down', polymorphic_path([:vote, votable], vote: :down),
+          method: :patch, remote: true, data: {type: :json},
+          class: "vote-down" unless votable.vote_value(current_user) == -1

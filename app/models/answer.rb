@@ -1,7 +1,10 @@
 class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
-  has_many :attachments, as: :attachable
+
+  include Attachable
+  include Votable
+  include Votelogic
 
   validates :body, presence: true
 

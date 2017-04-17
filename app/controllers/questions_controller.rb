@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :destroy]
-  before_action :question_load, only: [:show, :destroy, :update]
+  before_action :question_load, only: [:show, :destroy, :update, :vote]
+  before_action :check_vote, only: [:vote]
 
   def index
     @questions = Question.all
@@ -42,7 +43,21 @@ class QuestionsController < ApplicationController
     redirect_to questions_path
   end
 
+  def vote
+    if value = @question.vote(params[:vote].to_sym, current_user)
+      render json: { votable: @question, value: value }
+    else
+      render json: { errors: ["you have already voted"]}, status: 403
+    end
+  end
+
   private
+
+  def check_vote
+    if params[:vote].blank? || !%w(up down).include?(params[:vote])
+      render json: {errors: ["invalid vote for answer #{@question.id}"]}, status: 422
+    end
+  end
 
   def question_load
     @question = Question.find(params[:id])
